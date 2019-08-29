@@ -9,7 +9,7 @@ from androidemu.emulator import Emulator
 from androidemu.java.java_class_def import JavaClassDef
 from androidemu.java.java_method_def import java_method_def
 
-from samples import debug_utils
+import debug_utils
 
 class XGorgen(metaclass=JavaClassDef, jvm_name='com/ss/sys/ces/a'):
     def __init__(self):
