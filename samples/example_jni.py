@@ -11,7 +11,7 @@ from androidemu.java.java_method_def import java_method_def
 
 
 # Create java class.
-from samples import debug_utils
+import debug_utils
 
 
 class MainActivity(metaclass=JavaClassDef, jvm_name='local/myapp/testnativeapp/MainActivity'):
