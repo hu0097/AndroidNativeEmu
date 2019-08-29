@@ -14,6 +14,8 @@ def test_arm():
     mu = Uc(UC_ARCH_ARM, UC_MODE_ARM)
 
     ADDRESS = 0x10000
+    mu.mem_map(ADDRESS, 2 * 0x10000)
+    
     mu.mem_write(ADDRESS, ARM_CODE)
     
     mu.reg_write(UC_ARM_REG_R0, 0x1234)
