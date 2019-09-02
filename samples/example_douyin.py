@@ -2,7 +2,7 @@ import logging
 import posixpath
 import sys
 
-from unicorn import UcError, UC_HOOK_CODE, UC_HOOK_MEM_UNMAPPED
+from unicorn import UcError, UC_HOOK_CODE, UC_HOOK_MEM_UNMAPPED, UC_HOOK_MEM_READ
 from unicorn.arm_const import *
 
 from androidemu.emulator import Emulator
@@ -114,11 +114,11 @@ emulator.java_classloader.add_class(java_lang_Thread)
 emulator.java_classloader.add_class(java_lang_StackTraceElement)
 
 # Load all libraries.
-emulator.load_library("samples/example_binaries/libdl.so")
-emulator.load_library("samples/example_binaries/libc.so")
-emulator.load_library("samples/example_binaries/libstdc++.so")
-emulator.load_library("samples/example_binaries/libm.so")
-lib_module = emulator.load_library("samples/example_binaries/libcms.so")
+emulator.load_library("example_binaries/libdl.so")
+emulator.load_library("example_binaries/libc.so", do_init=False)
+emulator.load_library("example_binaries/libstdc++.so")
+emulator.load_library("example_binaries/libm.so")
+lib_module = emulator.load_library("example_binaries/libcms.so", do_init=False)
 
 # Show loaded modules.
 logger.info("Loaded modules:")
@@ -128,44 +128,64 @@ for module in emulator.modules:
 
 # Debug
 # emulator.mu.hook_add(UC_HOOK_CODE, debug_utils.hook_code)
-emulator.mu.hook_add(UC_HOOK_MEM_UNMAPPED, debug_utils.hook_unmapped)
+# emulator.mu.hook_add(UC_HOOK_MEM_UNMAPPED, debug_utils.hook_unmapped)
 # emulator.mu.hook_add(UC_HOOK_MEM_WRITE, debug_utils.hook_mem_write)
 # emulator.mu.hook_add(UC_HOOK_MEM_READ, debug_utils.hook_mem_read)
 
-try:
-    # Run JNI_OnLoad.
-    #   JNI_OnLoad will call 'RegisterNatives'.
-    emulator.call_symbol(lib_module, 'JNI_OnLoad', emulator.java_vm.address_ptr, 0x00)
+# try:
+#     # Run JNI_OnLoad.
+#     #   JNI_OnLoad will call 'RegisterNatives'.
+#     emulator.call_symbol(lib_module, 'JNI_OnLoad', emulator.java_vm.address_ptr, 0x00)
 
 
-    # bypass douyin checks
-    with open("misc/samples/app_process32", 'rb') as ap:
-        data = ap.read()
-        len1 = len(data) + 1024 - (len(data) % 1024)
-        emulator.mu.mem_map(0xab006000, len1)
-        emulator.mu.mem_write(0xab006000, data)
+#     # bypass douyin checks
+#     with open("misc/app_process32", 'rb') as ap:
+#         data = ap.read()
+#         len1 = len(data) + 1024 - (len(data) % 1024)
+#         emulator.mu.mem_map(0xab006000, len1)
+#         emulator.mu.mem_write(0xab006000, data)
 
 
-    x = XGorgen()
-    data = 'acde74a94e6b493a3399fac83c7c08b35D58B21D9582AF77647FC9902E36AE70f9c001e9334e6e94916682224fbe4e5f00000000000000000000000000000000'
-    data = bytearray(bytes.fromhex(data))
-    result = x.leviathan(emulator, 1562848170, data)
+#     x = XGorgen()
+#     data = 'acde74a94e6b493a3399fac83c7c08b35D58B21D9582AF77647FC9902E36AE70f9c001e9334e6e94916682224fbe4e5f00000000000000000000000000000000'
+#     data = bytearray(bytes.fromhex(data))
+#     result = x.leviathan(emulator, 1562848170, data)
 
 
 
-    print(''.join(['%02x' % b for b in result]))
-    # 037d560d0000903e34fb093f1d21e78f3bdf3fbebe00b124becc
-    # 036d2a7b000010f4d05395b7df8b0ec2b5ec085b938a473a6a51
-    # 036d2a7b000010f4d05395b7df8b0ec2b5ec085b938a473a6a51
+#     print(''.join(['%02x' % b for b in result]))
+#     # 037d560d0000903e34fb093f1d21e78f3bdf3fbebe00b124becc
+#     # 036d2a7b000010f4d05395b7df8b0ec2b5ec085b938a473a6a51
+#     # 036d2a7b000010f4d05395b7df8b0ec2b5ec085b938a473a6a51
 
-    # 0300000000002034d288fe8d6b95b778105cc36eade709d2b500
-    # 0300000000002034d288fe8d6b95b778105cc36eade709d2b500
-    # 0300000000002034d288fe8d6b95b778105cc36eade709d2b500
-    # Dump natives found.
+#     # 0300000000002034d288fe8d6b95b778105cc36eade709d2b500
+#     # 0300000000002034d288fe8d6b95b778105cc36eade709d2b500
+#     # 0300000000002034d288fe8d6b95b778105cc36eade709d2b500
+#     # Dump natives found.
 
-  #  for method in MainActivity.jvm_methods.values():
-  #      if method.native:
-   #         logger.info("- [0x%08x] %s - %s" % (method.native_addr, method.name, method.signature))
-except UcError as e:
-    print("Exit at %x" % emulator.mu.reg_read(UC_ARM_REG_PC))
-    raise
+#   #  for method in MainActivity.jvm_methods.values():
+#   #      if method.native:
+#    #         logger.info("- [0x%08x] %s - %s" % (method.native_addr, method.name, method.signature))
+# except UcError as e:
+#     print("Exit at %x" % emulator.mu.reg_read(UC_ARM_REG_PC))
+#     raise
+
+
+
+
+emulator.call_symbol(lib_module, 'JNI_OnLoad', emulator.java_vm.address_ptr, 0x00)
+
+# # bypass douyin checks
+# with open("misc/app_process32", 'rb') as ap:
+#     data = ap.read()
+#     len1 = len(data) + 1024 - (len(data) % 1024)
+#     emulator.mu.mem_map(0xab006000, len1)
+#     emulator.mu.mem_write(0xab006000, data)
+
+
+# x = XGorgen()
+# data = 'acde74a94e6b493a3399fac83c7c08b35D58B21D9582AF77647FC9902E36AE70f9c001e9334e6e94916682224fbe4e5f00000000000000000000000000000000'
+# data = bytearray(bytes.fromhex(data))
+# result = x.leviathan(emulator, 1562848170, data)
+
+

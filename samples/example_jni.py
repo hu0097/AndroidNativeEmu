@@ -47,7 +47,7 @@ emulator.java_classloader.add_class(MainActivity)
 
 # Load all libraries.
 emulator.load_library("example_binaries/libdl.so")
-emulator.load_library("example_binaries/libc.so")
+emulator.load_library("example_binaries/libc.so", do_init=False)
 emulator.load_library("example_binaries/libstdc++.so")
 emulator.load_library("example_binaries/libm.so")
 lib_module = emulator.load_library("example_binaries/libnative-lib_jni.so")

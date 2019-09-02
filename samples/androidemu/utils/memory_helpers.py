@@ -26,6 +26,8 @@ def read_utf8(mu, address):
         buffer += buf_read
         buffer_address += buffer_read_size
 
+    print(buffer[:null_pos])
+    # return buffer[:null_pos]
     return buffer[:null_pos].decode("utf-8")
 
 def read_uints(mu, address, num = 1):

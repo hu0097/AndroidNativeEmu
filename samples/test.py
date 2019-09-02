@@ -10,6 +10,7 @@ ARM_CODE   = b"\x37\x00\xa0\xe3\x03\x10\x42\xe0"
 # callback for tracing instructions
 def hook_code(uc, address, size, user_data):
     print(">>> Tracing instruction at 0x%x, instruction size = 0x%x" %(address, size))
+    print(">>> Tracing instruction at 0x%x" %(user_data))
 
 # Test ARM
 def test_arm():
@@ -26,7 +27,7 @@ def test_arm():
     mu.reg_write(UC_ARM_REG_R2, 0x6789)
     mu.reg_write(UC_ARM_REG_R3, 0x3333)
 
-    mu.hook_add(UC_HOOK_CODE, hook_code, begin=ADDRESS, end=ADDRESS)
+    mu.hook_add(UC_HOOK_CODE, hook_code, begin=ADDRESS, end=ADDRESS+8)
 
     # emulate machine code in infinite time
     mu.emu_start(ADDRESS, ADDRESS + len(ARM_CODE))
@@ -35,10 +36,12 @@ def test_arm():
     r1 = mu.reg_read(UC_ARM_REG_R1)
     r2 = mu.reg_read(UC_ARM_REG_R2)
     r3 = mu.reg_read(UC_ARM_REG_R3)
+    sp = mu.reg_read(UC_ARM_REG_SP)
     print(">>> R0 = 0x%x" % r0)
     print(">>> R1 = 0x%x" % r1)
     print(">>> R2 = 0x%x" % r2)
     print(">>> R3 = 0x%x" % r3)
+    print(">>> sp = 0x%x" % sp)
 
 test_arm()
 
