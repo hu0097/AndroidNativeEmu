@@ -8,9 +8,11 @@ ARM_CODE   = b"\x37\x00\xa0\xe3\x03\x10\x42\xe0"
 # sub r1, r2, r3
 
 # callback for tracing instructions
-def hook_code(uc, address, size, user_data):
-    print(">>> Tracing instruction at 0x%x, instruction size = 0x%x" %(address, size))
-    print(">>> Tracing instruction at 0x%x" %(user_data))
+# Add debugging.
+def hook_code(mu, address, size, user_data):
+    instruction = mu.mem_read(address, size)
+    instruction_str = ''.join('{:02x} '.format(x) for x in instruction)
+    print('# Tracing instruction at 0x%x, instruction size = 0x%x, instruction = %s' % (address, size, instruction_str))
 
 # Test ARM
 def test_arm():
