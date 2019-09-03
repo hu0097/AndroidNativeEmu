@@ -21,9 +21,10 @@ def hook_code(mu, address, size, user_data):
 
 mu = Uc(UC_ARCH_X86, UC_MODE_32)
 
-BASE = 0x80000
+BASE = 0x08048000
 STACK_ADDR = 0x0
-STACK_SIZE = 3 * 0x10000
+# STACK_SIZE = 3 * 0x10000
+STACK_SIZE = 1024*1024
 
 mu.mem_map(STACK_ADDR, STACK_SIZE)
 mu.mem_map(BASE, STACK_SIZE)
@@ -46,7 +47,7 @@ mu.mem_write(r_esp+8, p32(STRING_ADDR)) #set the second argument. This is a poin
 
 mu.hook_add(UC_HOOK_CODE, hook_code)
 
-mu.emu_start(0x8057b, 0x805AB)      #start emulation from the beginning of super_function, end at RET instruction
+mu.emu_start(0x0804857b, 0x080485AB)      #start emulation from the beginning of super_function, end at RET instruction
 return_value = mu.reg_read(UC_X86_REG_EAX)
 print(return_value)
 print("The returned value is: %d" % return_value)
