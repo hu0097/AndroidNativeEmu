@@ -104,23 +104,23 @@
 
 
 
-from unicorn import *
-from unicorn.x86_const import *
+# from unicorn import *
+# from unicorn.x86_const import *
 
-shellcode = "xe8xffxffxffxffxc0x5dx6ax05x5bx29xddx83xc5x4ex89xe9x6ax02x03x0cx24x5bx31xd2x66xbax12x00x8bx39xc1xe7x10xc1xefx10x81xe9xfexffxffxffx8bx45x00xc1xe0x10xc1xe8x10x89xc3x09xfbx21xf8xf7xd0x21xd8x66x89x45x00x83xc5x02x4ax85xd2x0fx85xcfxffxffxffxecx37x75x5dx7ax05x28xedx24xedx24xedx0bx88x7fxebx50x98x38xf9x5cx96x2bx96x70xfexc6xffxc6xffx9fx32x1fx58x1ex00xd3x80" 
-
-
-BASE = 0x400000
-STACK_ADDR = 0x0
-STACK_SIZE = 1024*1024
-
-mu = Uc (UC_ARCH_X86, UC_MODE_32)
-
-mu.mem_map(BASE, 1024*1024)
-mu.mem_map(STACK_ADDR, STACK_SIZE)
+# shellcode = "xe8xffxffxffxffxc0x5dx6ax05x5bx29xddx83xc5x4ex89xe9x6ax02x03x0cx24x5bx31xd2x66xbax12x00x8bx39xc1xe7x10xc1xefx10x81xe9xfexffxffxffx8bx45x00xc1xe0x10xc1xe8x10x89xc3x09xfbx21xf8xf7xd0x21xd8x66x89x45x00x83xc5x02x4ax85xd2x0fx85xcfxffxffxffxecx37x75x5dx7ax05x28xedx24xedx24xedx0bx88x7fxebx50x98x38xf9x5cx96x2bx96x70xfexc6xffxc6xffx9fx32x1fx58x1ex00xd3x80" 
 
 
-mu.mem_write(BASE, shellcode)
+# BASE = 0x400000
+# STACK_ADDR = 0x0
+# STACK_SIZE = 1024*1024
+
+# mu = Uc (UC_ARCH_X86, UC_MODE_32)
+
+# mu.mem_map(BASE, 1024*1024)
+# mu.mem_map(STACK_ADDR, STACK_SIZE)
+
+
+# mu.mem_write(BASE, shellcode)
 # mu.reg_write(UC_X86_REG_ESP, STACK_ADDR + STACK_SIZE/2)
 
 # def syscall_num_to_name(num):
@@ -155,3 +155,17 @@ mu.mem_write(BASE, shellcode)
 # mu.hook_add(UC_HOOK_CODE, hook_code)
 
 # mu.emu_start(BASE, BASE-1)
+
+
+import re
+a='[{score=6, decision=Accept, name=激活设备状态异常_设备首次出现, id=51982374, uuid=74d57533f04f4620a0b03d4ee1f910ae, parentUuid=}, {score=14, decision=Accept, name=行为频度类规则--7天内当前渠道下开机时刻字段关联多个设备ID, id=51982754, uuid=68835d81eccf47458c750fdd84ec54df, parentUuid=}]'
+
+
+pattern = r'score=([^,]*),[^{^}]*name=([^,]*)'
+b = re.findall(pattern, a, re.S)
+print(b)
+
+
+
+
+

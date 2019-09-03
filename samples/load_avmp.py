@@ -50,7 +50,9 @@ emulator.load_library("example_binaries/libdl.so")
 emulator.load_library("example_binaries/libc.so", do_init=False)
 emulator.load_library("example_binaries/libstdc++.so")
 emulator.load_library("example_binaries/libm.so")
-lib_module = emulator.load_library("libsgavmpso-6.4.31.so")
+lib_module = emulator.load_library("libsgavmpso-6.4.31.so", do_init=False)
+
+
 
 # # Show loaded modules.
 # logger.info("Loaded modules:")
